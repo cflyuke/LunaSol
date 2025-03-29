@@ -6,7 +6,10 @@ A Python-based astronomical model for predicting and analyzing solar and lunar e
 ## Demo
 **You can get more information in demo.ipynb**
 - **Predict Eclipse Orbit**
+  - **Solar eclipse**
 <video src="https://github.com/user-attachments/assets/5298cb8f-43c7-4afa-80c6-99ddf207ccd9" controls width="600"></video>
+
+  - **Lunar eclipse**
 <video src="https://github.com/user-attachments/assets/6320a26e-53b1-4854-815d-ebec4636010f" controls width="600"></video>
 
 - **Predict Orbit Error**
@@ -46,8 +49,8 @@ A Python-based astronomical model for predicting and analyzing solar and lunar e
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/cflyuke/mmodel.git
-cd mmodel
+git clone https://github.com/cflyuke/LunaSol.git
+cd LunaSol
 ```
 
 2. Install required dependencies and the package in development mode:
