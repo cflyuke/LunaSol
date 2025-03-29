@@ -7,7 +7,10 @@
 ## 演示
 **在demo.ipynb中你能看到更多**
 - **预测日/月食轨迹**
+  - **日食**
 <video src="https://github.com/user-attachments/assets/5298cb8f-43c7-4afa-80c6-99ddf207ccd9" controls width="600"></video>
+
+  - **月食**
 <video src="https://github.com/user-attachments/assets/6320a26e-53b1-4854-815d-ebec4636010f" controls width="600"></video>
 
 - **预测轨道误差**

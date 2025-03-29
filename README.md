@@ -6,7 +6,10 @@ A Python-based astronomical model for predicting and analyzing solar and lunar e
 ## Demo
 **You can get more information in demo.ipynb**
 - **Predict Eclipse Orbit**
+  - **Solar ecliipse**
 <video src="https://github.com/user-attachments/assets/5298cb8f-43c7-4afa-80c6-99ddf207ccd9" controls width="600"></video>
+
+  - **Lunar Eclipse**
 <video src="https://github.com/user-attachments/assets/6320a26e-53b1-4854-815d-ebec4636010f" controls width="600"></video>
 
 - **Predict Orbit Error**
