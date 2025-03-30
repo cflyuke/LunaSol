@@ -7,6 +7,9 @@ from .Orbit import Orbit
 import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 
 class Eclipse:
     """天文食(日食/月食)计算基类
@@ -25,7 +28,7 @@ class Eclipse:
                  reference_file_path=None,
                  refine_timestep=1,
                  bodies=['EARTH','MOON','SUN'],
-                 masses ={'EARTH': 5.972e24,'MOON': 7.342e22, 'SUN': 1.989e30}, 
+                 masses ={'EARTH': 5.972168e24,'MOON': 7.346303e22, 'SUN': 1.988470e30}, 
                  kernel_files=['data/de442.bsp', 'data/earth_200101_990827_predict.bpc', 'data/naif0012.tls', 'data/jup346.bsp'],
                  output_dir='output'):
         self.orbit = Orbit(
@@ -201,8 +204,8 @@ class Eclipse:
                         flags = np.array(flags)
                         state_str = get_state_str(states[0])
                         time_pos = np.argmin(distances)
-                        flag_pos = np.argmin(flags)
-                        file2.write(f'{times[0]},{times[-1]},{self.eclipse_types[flags[time_pos]]},{times[flag_pos]},{state_str}\n')
+                        flag_pos = time_pos
+                        file2.write(f'{times[0]},{times[-1]},{self.eclipse_types[flags[flag_pos]]},{times[time_pos]},{state_str}\n')
                         
                         eclipse_start = None
                 eclipse_last_flag = eclipse_flag
@@ -469,26 +472,44 @@ class Eclipse:
         plt.close()
         
         # 3. 绘制误差类型饼图
-        fig, axes = plt.subplots(1, len(all_errors), figsize=(5*len(all_errors), 5))
+        num_plots = len(all_errors)
+        cols = min(3, num_plots)  # Maximum 4 plots per row
+        rows = (num_plots + cols - 1) // cols  # Ceiling division to get number of rows
+        
+        fig, axes = plt.subplots(rows, cols, figsize=(5*cols, 5*rows))
         plt.suptitle(f"Error types statistic\n{' '.join(self.orbit.bodies)}")
-        if len(all_errors) == 1:
-            axes = [axes]
+        
+        # Handle different subplot configurations
+        if rows == 1 and cols == 1:
+            axes_flat = [axes]
+        else:
+            # Convert to array if not already
+            axes = np.array(axes)
+            if rows == 1:
+                axes = np.array([axes])
+            elif cols == 1:
+                axes = np.array([[ax] for ax in axes])
+            axes_flat = axes.flatten()
+        
+        # Hide unused subplots
+        for i in range(num_plots, len(axes_flat)):
+            axes_flat[i].set_visible(False)
         
         for i, (method, errors) in enumerate(all_errors.items()):
             total = sum([errors['miss'], errors['mistake'], errors['addition']])
             if total == 0:
                 # Show empty pie chart with "No Data" label
-                axes[i].pie([1], labels=['No Error'], colors=['lightgreen'],
+                axes_flat[i].pie([1], labels=['No Error'], colors=['lightgreen'],
                           wedgeprops={'edgecolor':'lightgreen', 'linewidth':1})
-                axes[i].set_title(method)
+                axes_flat[i].set_title(method)
                 continue
                 
             sizes = [errors['miss'], errors['mistake'], errors['addition']]
             labels = [f'Miss\n{sizes[0]}', f'Mistake\n{sizes[1]}', f'Addition\n{sizes[2]}']
             
-            axes[i].pie(sizes, labels=labels, autopct='%1.1f%%',
+            axes_flat[i].pie(sizes, labels=labels, autopct='%1.1f%%',
                        colors=[colors[0], colors[1], colors[2]])
-            axes[i].set_title(method)
+            axes_flat[i].set_title(method)
         
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, 'error_types_pie.png'),
@@ -577,7 +598,3 @@ class Eclipse:
             rtols: 相对误差容限列表
             atols: 绝对误差容限列表
         """
-        file_paths = self.predict_eclipse(startyear, endyear, use_official_data=True, dynamics_funcs=dynamics_funcs, methods=methods, rtols=rtols, atols=atols)
-        self.visualize_error(startyear=startyear, endyear=endyear, predict_files=file_paths)
-        self.visualize_orbit(startyear, file_paths[0], use_official_data=True)
-        return file_paths
