@@ -6,12 +6,20 @@ from scipy.integrate import solve_ivp
 from .utils import parse_time, add_time
 from tqdm import tqdm
 
+
+# Sun: 1.988470e+30 kg  
+# Earth: 5.972168e+24 kg  
+# Moon: 7.346303e+22 kg  
+# Jupiter: 1.898187e+27 kg  
+# Venus: 4.867468e+24 kg
+
+
 class Orbit:
     def __init__(self, 
                  bodies=['EARTH', 'MOON', 'SUN'], 
                  observer='SUN',
                  frame='ECLIPJ2000',
-                 masses={'EARTH': 5.972e24,'MOON': 7.342e22, 'SUN': 1.989e30},
+                 masses={'EARTH': 5.972168e24,'MOON': 7.346303e22, 'SUN': 1.988470e30},
                  kernel_files=['data/de442.bsp', 'data/earth_200101_990827_predict.bpc', 'data/naif0012.tls', 'data/jup346.bsp'],
                  output_dir='output',
                  ):

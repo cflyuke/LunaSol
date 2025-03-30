@@ -1,8 +1,5 @@
 from datetime import datetime, timedelta
 import numpy as np
-import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
 import cv2
 EARTH_RADIUS = 6371
 MOON_RADIUS = 1737

@@ -6,20 +6,20 @@ A Python-based astronomical model for predicting and analyzing solar and lunar e
 ## Demo
 **You can get more information in demo.ipynb**
 - **Predict Eclipse Orbit**
-  - **Solar eclipse**
+  - **Solar ecliipse**
 <video src="https://github.com/user-attachments/assets/5298cb8f-43c7-4afa-80c6-99ddf207ccd9" controls width="600"></video>
 
-  - **Lunar eclipse**
+  - **Lunar Eclipse**
 <video src="https://github.com/user-attachments/assets/6320a26e-53b1-4854-815d-ebec4636010f" controls width="600"></video>
 
 - **Predict Orbit Error**
 <div align="center"> 
-  <img src="https://github.com/user-attachments/assets/ef4b573d-b1e1-4788-89fc-b2ca4a0755ab" alt="orbit errors" width="600">
+  <img src="https://github.com/user-attachments/assets/402f6f70-9f86-445d-8e43-80c08e6943f8" alt="orbit errors" width="600">
   </div>
 
 - **Predict Eclipse Error**
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/55fd6fbf-0d0f-4d73-8898-04b330688f7e" alt="Eclipse error" width="600">
+  <img src="https://github.com/user-attachments/assets/e786eaae-e0c1-4703-8427-0596cb9b613e" alt="Eclipse error" width="600">
   </div> 
 
 
