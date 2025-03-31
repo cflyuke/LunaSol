@@ -62,13 +62,11 @@ pip install -e .
 This will install the package in development mode, allowing you to import it from anywhere in your Python environment.
 
 ## Project Structure
-
 ```
 .
 ├── README.md
 ├── README_CN.md
-├── demo.ipynb
-├── setup.py
+├── demo.ipynb           # show the result in the jupyter notebook
 ├── LunaSol/             # Source code
 │   ├── Eclipse.py            # Base eclipse calculation class
 │   ├── LunarEclipse.py       # Lunar eclipse specific calculations
@@ -80,18 +78,18 @@ This will install the package in development mode, allowing you to import it fro
 │   ├── earth_200101_990827_predict.bpc
 │   ├── jup346.bsp
 │   ├── naif0012.tls
-│   ├── lunar_eclipse_data.csv
+│   ├── lunar_eclipse_data.csv  # standard predict eclipse from nasa
 │   └── solar_eclipse_data.csv
-└── output/                  # All output files
-    ├── Lunar_eclipse/
-    ├── Lunar_eclipse_error_visualize/
-    ├── Lunar_eclipse_video/
-    ├── Solar_eclipse/
-    ├── Solar_eclipse_error_visualize/
-    ├── Solar_eclipse_video/
-    └── orbit_error_visualize/
+├── result
+│   ├── eclipse_video        # eclipse orbit visualization
+│   ├── orbit_error_visualize  # orbit error visualization
+│   ├── output_3_bodies        # predict result only consider earth, moon, sun
+│   └── output_with_JUPITER_VENUS # predict result consider Venuse and Jupiter
+├── requirements.txt
+└── setup.py
 ```
-[Data reference]((https://naif.jpl.nasa.gov/pub/naif/generic_kernels))
+Data reference : (https://naif.jpl.nasa.gov/pub/naif/generic_kernels)
+Eclipse reference : (https://eclipse.gsfc.nasa.gov/)
 ## Dependencies
 
 - numpy
