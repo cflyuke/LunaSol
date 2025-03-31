@@ -44,13 +44,13 @@ class LunarEclipse(Eclipse):
         """确定月食类型 
         
         Args:
-            star1: 太阳位置
-            star2: 地球位置
-            star2_radius: 地球半径
-            remote_point: 远地点位置
-            remote_angle: 远地点视角
-            near_point: 近地点位置
-            near_angle: 近地点视角
+            star1 (array): 地球位置向量(km)
+            star2 (array): 月球位置向量(km)
+            star2_radius (float): 地球半径(km)
+            remote_point (array): 本影锥锥顶位置向量(km)
+            remote_angle (float): 本影锥锥角(rad)
+            near_point (array): 半影锥锥顶位置向量(km)
+            near_angle (float): 半影锥锥角(rad)
             
         Returns:
             int: 月食类型索引(0:无食,1:全食,2:偏食,3:半影食)

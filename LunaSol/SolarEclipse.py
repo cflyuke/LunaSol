@@ -44,13 +44,13 @@ class SolarEclipse(Eclipse):
         """确定日食类型
         
         Args:
-            star1 (array): 太阳位置向量(km)
-            star2 (array): 月球位置向量(km)
-            star2_radius (float): 月球半径(km)
-            remote_point (array): 远地点位置向量(km)
-            remote_angle (float): 远地点视角(rad)
-            near_point (array): 近地点位置向量(km)
-            near_angle (float): 近地点视角(rad)
+            star1 (array): 月球位置向量(km)
+            star2 (array): 地球位置向量(km)
+            star2_radius (float): 地球半径(km)
+            remote_point (array): 本影锥锥顶位置向量(km)
+            remote_angle (float): 本影锥锥角(rad)
+            near_point (array): 半影锥锥顶位置向量(km)
+            near_angle (float): 半影锥锥角(rad)
             
         Returns:
             tuple: 食类型标志
