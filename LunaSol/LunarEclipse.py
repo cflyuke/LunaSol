@@ -55,10 +55,10 @@ class LunarEclipse(Eclipse):
         Returns:
             int: 月食类型索引(0:无食,1:全食,2:偏食,3:半影食)
         """
-        if distance(star1, near_point) > distance(star2, near_point):
-            return 0
         star2_near_angle = angle(star2, near_point, star1)
         delta_near = np.arcsin(star2_radius / distance(near_point, star2))
+        if distance(star1, near_point)*np.cos(near_angle) > distance(star2, near_point):
+            return 0
         if star2_near_angle - delta_near <= near_angle: 
             star2_remote_angle = angle(star2, remote_point, star1)
             delta_remote = np.arcsin(star2_radius / distance(remote_point, star2))
