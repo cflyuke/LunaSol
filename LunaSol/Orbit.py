@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 from .utils import parse_time, add_time
 from tqdm import tqdm
+import csv
 
 
 # Sun: 1.988470e+30 kg  
@@ -647,73 +648,61 @@ class Orbit:
                         
                         pbar.update(1)
         
-        # 计算各方法平均误差
-        avg_pos_errors = {method: {body.lower(): 0 for body in self.bodies} 
-                         for method in methods}
-        avg_vel_errors = {method: {body.lower(): 0 for body in self.bodies} 
-                         for method in methods}
-        
-        for method in methods:
-            for body in self.bodies:
-                b = body.lower()
-                count = 0
-                for param_key in param_labels:
-                    if method in param_key:
-                        avg_pos_errors[method][b] += np.mean(all_pos_errors[param_key][b])
-                        avg_vel_errors[method][b] += np.mean(all_vel_errors[param_key][b])
-                        count += 1
-                if count > 0:
-                    avg_pos_errors[method][b] /= count
-                    avg_vel_errors[method][b] /= count
-        
         # 设置绘图样式
         plt.style.use('seaborn-v0_8-darkgrid')
         colors = plt.cm.tab20.colors
         
-        # 0. 绘制平均误差柱状图
-        fig, axes = plt.subplots(2, 1, figsize=(12, 10))
-        fig.suptitle(f'Average Orbit Errors ({startyear}-{endyear})\n'
-                     f"{', '.join(self.bodies)}\n"
-                     f'Dynamics: {", ".join(dynamics_funcs)} | Method: {", ".join(methods)}\nRTOLs: {", ".join(map(str, rtols))} | ATOLs: {", ".join(map(str, atols))}', 
-                    y=1.05)
+        # 1. 绘制所有星体位置误差图(每个星体一个子图)
+        fig_pos, axes_pos = plt.subplots(len(self.bodies), 1, figsize=(12, 6*len(self.bodies)))
+        if len(self.bodies) == 1:
+            axes_pos = [axes_pos]
         
-        # 位置误差柱状图
-        ax = axes[0]
-        width = 0.2
-        x = np.arange(len(self.bodies))
-        
-        for i, method in enumerate(methods):
-            errors = [avg_pos_errors[method][body.lower()] for body in self.bodies]
-            ax.bar(x + i*width, errors, width, label=method)
-        
-        ax.set_title('Average Position Error')
-        ax.set_ylabel('Error (km)')
-        ax.set_xticks(x + width*(len(methods)-1)/2)
-        ax.set_xticklabels(self.bodies)
-        ax.legend()
-        ax.grid(True, axis='y')
-        ax.set_yscale('log')
-        
-        # 速度误差柱状图
-        ax = axes[1]
-        for i, method in enumerate(methods):
-            errors = [avg_vel_errors[method][body.lower()] for body in self.bodies]
-            ax.bar(x + i*width, errors, width, label=method)
-        
-        ax.set_title('Average Velocity Error')
-        ax.set_ylabel('Error (km/s)')
-        ax.set_xticks(x + width*(len(methods)-1)/2)
-        ax.set_xticklabels(self.bodies)
-        ax.legend()
-        ax.grid(True, axis='y')
-        ax.set_yscale('log')
+        for i, body in enumerate(self.bodies):
+            b = body.lower()
+            pos_errors = [np.mean(all_pos_errors[param_key][b]) for param_key in param_labels]
+            
+            x = np.arange(len(param_labels))
+            axes_pos[i].bar(x, pos_errors, color=colors[:len(param_labels)])
+            
+            axes_pos[i].set_title(f'{body} Position Errors')
+            axes_pos[i].set_ylabel('Avg Position Error (km)')
+            axes_pos[i].set_xticks(x)
+            axes_pos[i].set_xticklabels(param_labels, rotation=45, ha='right')
+            axes_pos[i].grid(True, axis='y')
+            axes_pos[i].set_yscale('log')
         
         plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'average_errors.png'), 
-                    bbox_inches='tight', dpi=300)
+        plt.savefig(os.path.join(output_dir, 'all_bodies_position_errors.png'), 
+                   bbox_inches='tight', dpi=300)
         plt.show()
+        plt.close()
         
-        # 1. 绘制位置误差图
+        # 2. 绘制所有星体速度误差图(每个星体一个子图)
+        fig_vel, axes_vel = plt.subplots(len(self.bodies), 1, figsize=(12, 6*len(self.bodies)))
+        if len(self.bodies) == 1:
+            axes_vel = [axes_vel]
+        
+        for i, body in enumerate(self.bodies):
+            b = body.lower()
+            vel_errors = [np.mean(all_vel_errors[param_key][b]) for param_key in param_labels]
+            
+            x = np.arange(len(param_labels))
+            axes_vel[i].bar(x, vel_errors, color=colors[:len(param_labels)])
+            
+            axes_vel[i].set_title(f'{body} Velocity Errors')
+            axes_vel[i].set_ylabel('Avg Velocity Error (km/s)')
+            axes_vel[i].set_xticks(x)
+            axes_vel[i].set_xticklabels(param_labels, rotation=45, ha='right')
+            axes_vel[i].grid(True, axis='y')
+            axes_vel[i].set_yscale('log')
+        
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, 'all_bodies_velocity_errors.png'), 
+                   bbox_inches='tight', dpi=300)
+        plt.show()
+        plt.close()
+
+        # 3. 绘制位置误差折线图
         fig, axes = plt.subplots(len(self.bodies), 1, figsize=(15, 5*len(self.bodies)))
         fig.suptitle(f'Average Orbit Errors ({startyear}-{endyear})\n'
                      f'{', '.join(self.bodies)}\n'
@@ -739,8 +728,8 @@ class Orbit:
         plt.savefig(os.path.join(output_dir, 'position_errors.png'), 
                     bbox_inches='tight', dpi=300)
         plt.show()
-        
-        # 2. 绘制速度误差图
+
+        # 4. 绘制速度误差折线图
         fig, axes = plt.subplots(len(self.bodies), 1, figsize=(15, 5*len(self.bodies)))
         fig.suptitle(f'Average Orbit Errors ({startyear}-{endyear})\n'
                      f'{', '.join(self.bodies)}\n'
@@ -766,6 +755,26 @@ class Orbit:
         plt.savefig(os.path.join(output_dir, 'velocity_errors.png'),
                     bbox_inches='tight', dpi=300)
         plt.show()
+        
+        # 5. 输出CSV文件
+        csv_path = os.path.join(output_dir, 'error_data.csv')
+        with open(csv_path, 'w') as f:
+            writer = csv.writer(f)
+            # 写入表头
+            headers = ['param_key', 'body', 'avg_position_error', 'avg_velocity_error']
+            writer.writerow(headers)
+            
+            # 写入数据
+            for param_key in param_labels:
+                for body in self.bodies:
+                    b = body.lower()
+                    row = [
+                        param_key,
+                        body,
+                        np.mean(all_pos_errors[param_key][b]),
+                        np.mean(all_vel_errors[param_key][b])
+                    ]
+                    writer.writerow(row)
 
 if __name__=='__main__':
     orbit = Orbit(
