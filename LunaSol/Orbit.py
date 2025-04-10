@@ -672,7 +672,7 @@ class Orbit:
             axes_pos[i].set_yscale('log')
         
         plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'all_bodies_position_errors.png'), 
+        plt.savefig(os.path.join(output_dir, 'average_position_errors.png'), 
                    bbox_inches='tight', dpi=300)
         plt.show()
         plt.close()
@@ -697,7 +697,7 @@ class Orbit:
             axes_vel[i].set_yscale('log')
         
         plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'all_bodies_velocity_errors.png'), 
+        plt.savefig(os.path.join(output_dir, 'average_velocity_errors.png'), 
                    bbox_inches='tight', dpi=300)
         plt.show()
         plt.close()
